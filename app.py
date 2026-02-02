@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask_cors import CORS
-from analyze import read_image
+from analyze import read_image, read_image_from_stream
+import io
 
 app = Flask(__name__, template_folder='templates')
 CORS(app)
@@ -33,12 +34,32 @@ def send_static(path):
 # API at /api/v1/analysis/ 
 @app.route("/api/v1/analysis/", methods=['POST'])
 def analysis():
-    # Try to get the URI from the JSON
+    # Check if file upload
+    if 'file' in request.files:
+        file = request.files['file']
+        
+        if file.filename == '':
+            return jsonify({'error': 'No file selected'}), 400
+        
+        # Read file into memory stream
+        try:
+            image_stream = io.BytesIO(file.read())
+            res = read_image_from_stream(image_stream)
+            
+            response_data = {
+                "text": res
+            }
+            
+            return jsonify(response_data), 200
+        except Exception as e:
+            return jsonify({'error': f'Error processing file: {str(e)}'}), 500
+    
+    # Otherwise, try to get URI from JSON
     try:
         get_json = request.get_json()
         image_uri = get_json['uri']
     except:
-        return jsonify({'error': 'Missing URI in JSON'}), 400
+        return jsonify({'error': 'Missing URI in JSON or file upload'}), 400
     
     # Try to get the text from the image
     try:

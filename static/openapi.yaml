@@ -23,10 +23,18 @@ paths:
   /api/v1/analysis/:
     post:
       summary: Analyze image for text
-      description: Extracts text from an image using OCR
+      description: Extracts text from an image using OCR. Accepts either a file upload or image URI.
       requestBody:
         required: true
         content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Image file to analyze
           application/json:
             schema:
               type: object
@@ -51,7 +59,7 @@ paths:
                     description: Extracted text from the image
                     example: "Sample extracted text"
         '400':
-          description: Bad request - missing URI
+          description: Bad request - missing URI or file
           content:
             application/json:
               schema:
@@ -59,7 +67,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: "Missing URI in JSON"
+                    example: "Missing URI in JSON or file upload"
         '500':
           description: Internal server error - processing failed
           content:
