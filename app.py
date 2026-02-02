@@ -9,7 +9,7 @@ def home():
 
 
 # API at /api/v1/analysis/ 
-@app.route("/api/v1/analysis/", methods=['GET'])
+@app.route("/api/v1/analysis/", methods=['POST'])
 def analysis():
     # Try to get the URI from the JSON
     try:
