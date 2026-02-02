@@ -3,3 +3,5 @@ flask-swagger-ui
 flask-cors
 azure-ai-vision-imageanalysis
 python-decouple
+Pillow
+requests
