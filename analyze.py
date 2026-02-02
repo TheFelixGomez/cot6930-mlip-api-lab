@@ -1,5 +1,5 @@
 from azure.ai.vision.imageanalysis import ImageAnalysisClient
-from azure.ai.vision.imageanalysis.models import VisualFeatures
+from azure.ai.vision.imageanalysis.models import VisualFeatures, ImageAnalysisResult
 from azure.core.credentials import AzureKeyCredential
 from decouple import config
 
@@ -15,17 +15,28 @@ client = ImageAnalysisClient(
 )
 
 
-def _extract_text(result):
-    """Extract text from analysis result."""
+def _extract_text(result: ImageAnalysisResult):
+    """Extract text and bounding boxes from analysis result."""
     if result.read is None or result.read.blocks is None:
-        return "No text found"
+        return {"text": "No text found", "lines": []}
     
     text_lines = []
+    lines_with_boxes = []
+    
     for block in result.read.blocks:
         for line in block.lines:
             text_lines.append(line.text)
+            # Convert bounding polygon to serializable format
+            bounding_box = [{"x": point.x, "y": point.y} for point in line.bounding_polygon]
+            lines_with_boxes.append({
+                "text": line.text,
+                "bounding_box": bounding_box
+            })
     
-    return " ".join(text_lines) if text_lines else "No text found"
+    return {
+        "text": " ".join(text_lines) if text_lines else "No text found",
+        "lines": lines_with_boxes
+    }
 
 
 def read_image(uri):
