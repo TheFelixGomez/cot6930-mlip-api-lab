@@ -34,6 +34,9 @@ def send_static(path):
 # API at /api/v1/analysis/ 
 @app.route("/api/v1/analysis/", methods=['POST'])
 def analysis():
+    # Check if include_image parameter is set
+    include_image = request.args.get('include_image', 'false').lower() == 'true'
+    
     # Check if file upload
     if 'file' in request.files:
         file = request.files['file']
@@ -44,7 +47,7 @@ def analysis():
         # Read file into memory stream
         try:
             image_stream = io.BytesIO(file.read())
-            result = read_image_from_stream(image_stream)
+            result = read_image_from_stream(image_stream, include_image=include_image)
             return jsonify(result), 200
         except Exception as e:
             return jsonify({'error': f'Error processing file: {str(e)}'}), 500
@@ -58,7 +61,7 @@ def analysis():
     
     # Try to get the text from the image
     try:
-        result = read_image(image_uri)
+        result = read_image(image_uri, include_image=include_image)
         return jsonify(result), 200
     except Exception as e:
         return jsonify({'error': f'Error in processing: {str(e)}'}), 500

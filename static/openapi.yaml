@@ -23,7 +23,14 @@ paths:
   /api/v1/analysis/:
     post:
       summary: Analyze image for text
-      description: Extracts text from an image using OCR. Accepts either a file upload or image URI.
+      description: Extracts text from an image using OCR. Accepts either a file upload or image URI. Optionally returns the image with bounding boxes drawn.
+      parameters:
+        - in: query
+          name: include_image
+          schema:
+            type: boolean
+            default: false
+          description: If true, returns the image with bounding boxes drawn as base64
       requestBody:
         required: true
         content:
@@ -81,6 +88,10 @@ paths:
                                 type: number
                                 description: Y coordinate
                           example: [{"x": 10, "y": 20}, {"x": 100, "y": 20}, {"x": 100, "y": 40}, {"x": 10, "y": 40}]
+                  image_with_boxes_path:
+                    type: string
+                    description: Local file path where the image with bounding boxes is saved (only if include_image=true)
+                    example: "data/images/upload_20260202_233045_123456.png"
         '400':
           description: Bad request - missing URI or file
           content:
