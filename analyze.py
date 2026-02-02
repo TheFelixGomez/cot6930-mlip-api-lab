@@ -4,12 +4,15 @@ from azure.cognitiveservices.vision.computervision.models import OperationStatus
 import time
 from decouple import config
 
-endpoint = config("COMPUTER_VISION_ENDPOINT")
-key = config("COMPUTER_VISION_KEY")
+AZURE_CV_ENDPOINT = config("AZURE_CV_ENDPOINT")
+AZURE_CV_KEY = config("AZURE_CV_KEY")
 
-credentials = CognitiveServicesCredentials(key)
+if not AZURE_CV_ENDPOINT or not AZURE_CV_KEY:
+    raise RuntimeError("Missing AZURE_CV_ENDPOINT or AZURE_CV_KEY")
 
-client = ComputerVisionClient(endpoint=endpoint, credentials=credentials)
+credentials = CognitiveServicesCredentials(AZURE_CV_KEY)
+
+client = ComputerVisionClient(endpoint=AZURE_CV_ENDPOINT, credentials=credentials)
 
 
 def read_image(uri):
