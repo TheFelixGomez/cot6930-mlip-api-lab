@@ -1,0 +1,72 @@
+openapi: 3.0.0
+info:
+  title: Image Analysis API
+  description: API for OCR text extraction from images using Azure Computer Vision
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Development server
+
+paths:
+  /:
+    get:
+      summary: Home page
+      description: Returns the main HTML interface
+      responses:
+        '200':
+          description: HTML page
+          content:
+            text/html:
+              schema:
+                type: string
+
+  /api/v1/analysis/:
+    post:
+      summary: Analyze image for text
+      description: Extracts text from an image using OCR
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - uri
+              properties:
+                uri:
+                  type: string
+                  format: uri
+                  description: URL of the image to analyze
+                  example: "https://example.com/image.jpg"
+      responses:
+        '200':
+          description: Successful text extraction
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  text:
+                    type: string
+                    description: Extracted text from the image
+                    example: "Sample extracted text"
+        '400':
+          description: Bad request - missing URI
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Missing URI in JSON"
+        '500':
+          description: Internal server error - processing failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error in processing"
