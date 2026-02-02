@@ -1,11 +1,33 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory
+from flask_swagger_ui import get_swaggerui_blueprint
+from flask_cors import CORS
 from analyze import read_image
 
 app = Flask(__name__, template_folder='templates')
+CORS(app)
+
+# Swagger UI configuration
+SWAGGER_URL = '/api/docs'
+API_URL = '/static/openapi.yaml'
+
+swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "Image Analysis API"
+    }
+)
+
+app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
 @app.route("/")
 def home():
     return render_template('index.html')
+
+
+@app.route('/static/<path:path>')
+def send_static(path):
+    return send_from_directory('.', path)
 
 
 # API at /api/v1/analysis/ 
