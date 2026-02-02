@@ -1,5 +1,5 @@
 Flask
 flask-swagger-ui
 flask-cors
-azure-cognitiveservices-vision-computervision
+azure-ai-vision-imageanalysis
 python-decouple
