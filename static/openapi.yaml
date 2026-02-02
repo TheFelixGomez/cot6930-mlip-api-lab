@@ -56,8 +56,31 @@ paths:
                 properties:
                   text:
                     type: string
-                    description: Extracted text from the image
-                    example: "Sample extracted text"
+                    description: Extracted text from the image (all lines joined)
+                    example: "Sample extracted text from the image"
+                  lines:
+                    type: array
+                    description: Array of text lines with bounding boxes
+                    items:
+                      type: object
+                      properties:
+                        text:
+                          type: string
+                          description: Text content of the line
+                          example: "Sample text"
+                        bounding_box:
+                          type: array
+                          description: Polygon coordinates defining the bounding box
+                          items:
+                            type: object
+                            properties:
+                              x:
+                                type: number
+                                description: X coordinate
+                              y:
+                                type: number
+                                description: Y coordinate
+                          example: [{"x": 10, "y": 20}, {"x": 100, "y": 20}, {"x": 100, "y": 40}, {"x": 10, "y": 40}]
         '400':
           description: Bad request - missing URI or file
           content:

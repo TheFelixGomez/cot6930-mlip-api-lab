@@ -44,13 +44,8 @@ def analysis():
         # Read file into memory stream
         try:
             image_stream = io.BytesIO(file.read())
-            res = read_image_from_stream(image_stream)
-            
-            response_data = {
-                "text": res
-            }
-            
-            return jsonify(response_data), 200
+            result = read_image_from_stream(image_stream)
+            return jsonify(result), 200
         except Exception as e:
             return jsonify({'error': f'Error processing file: {str(e)}'}), 500
     
@@ -63,15 +58,10 @@ def analysis():
     
     # Try to get the text from the image
     try:
-        res = read_image(image_uri)
-        
-        response_data = {
-            "text": res
-        }
-    
-        return jsonify(response_data), 200
-    except:
-        return jsonify({'error': 'Error in processing'}), 500
+        result = read_image(image_uri)
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({'error': f'Error in processing: {str(e)}'}), 500
 
 
 if __name__ == "__main__":
