@@ -70,7 +70,20 @@ def _extract_text(result: ImageAnalysisResult):
             bounding_box = [
                 {"x": point.x, "y": point.y} for point in line.bounding_polygon
             ]
-            lines_with_boxes.append({"text": line.text, "bounding_box": bounding_box})
+            
+            # Extract word-level confidence scores
+            words_data = []
+            for word in line.words:
+                words_data.append({
+                    "text": word.text,
+                    "confidence": word.confidence
+                })
+            
+            lines_with_boxes.append({
+                "text": line.text,
+                "bounding_box": bounding_box,
+                "words": words_data
+            })
 
     return {
         "text": " ".join(text_lines) if text_lines else "No text found",

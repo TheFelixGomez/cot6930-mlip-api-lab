@@ -88,6 +88,21 @@ paths:
                                 type: number
                                 description: Y coordinate
                           example: [{"x": 10, "y": 20}, {"x": 100, "y": 20}, {"x": 100, "y": 40}, {"x": 10, "y": 40}]
+                        words:
+                          type: array
+                          description: Individual words with confidence scores
+                          items:
+                            type: object
+                            properties:
+                              text:
+                                type: string
+                                description: Word text
+                                example: "Sample"
+                              confidence:
+                                type: number
+                                format: float
+                                description: Confidence score (0.0 to 1.0)
+                                example: 0.987
                   image_with_boxes_path:
                     type: string
                     description: Local file path where the image with bounding boxes is saved (only if include_image=true)
